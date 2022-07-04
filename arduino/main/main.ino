@@ -1,12 +1,14 @@
 #include <Arduino.h>
 #include <arduino_homekit_server.h>;
 #include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <ESP8266mDNS.h>
 #include <DHT.h>
 
 #define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
-#define DHTPIN 2
-#define DHTTYPE    DHT11
-DHT dht(DHTPIN, DHTTYPE);
+// #define DHTPIN 2
+// #define DHTTYPE    DHT11
+DHT dht(2, DHT11);
 
   
 //access the config defined in C code
@@ -20,13 +22,16 @@ const char* password = "93777898162534130520";
 static uint32_t next_heap_millis = 0;
 static uint32_t next_report_millis = 0;
 
+
+
 void setup() {
   Serial.begin(9600);
-  WiFi.begin(ssid, password);
-  arduino_homekit_setup(&config);
+  wifi_connect();
+  my_homekit_setup();
 }
 
 void loop() {
+  MDNS.update();
   my_homekit_loop();
   delay(10);
 }
@@ -79,6 +84,21 @@ void my_homekit_report() {
   homekit_characteristic_notify(&cha_humidity, cha_humidity.value);
   
 }
+
+void wifi_connect() {
+  WiFi.persistent(false);
+  WiFi.mode(WIFI_STA);
+  WiFi.setAutoReconnect(true);
+  WiFi.begin(ssid, password);
+  Serial.println("WiFi connecting...");
+  while (!WiFi.isConnected()) {
+    delay(100);
+    Serial.print(".");
+  }
+  Serial.print("\n");
+  Serial.printf("WiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
+}
+
 
 int random_value(int min, int max) {
   return min + random(max - min);
