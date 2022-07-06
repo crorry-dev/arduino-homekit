@@ -14,7 +14,7 @@ homekit_accessory_t *accessories[] = {
         HOMEKIT_SERVICE(ACCESSORY_INFORMATION, .characteristics=(homekit_characteristic_t*[]) {
             HOMEKIT_CHARACTERISTIC(NAME, "Temperature Sensor"),
             HOMEKIT_CHARACTERISTIC(MANUFACTURER, "Arduino HomeKit"),
-            HOMEKIT_CHARACTERISTIC(SERIAL_NUMBER, "0123456"),
+            HOMEKIT_CHARACTERISTIC(SERIAL_NUMBER, "01234567"),
             HOMEKIT_CHARACTERISTIC(MODEL, "ESP8266"),
             HOMEKIT_CHARACTERISTIC(FIRMWARE_REVISION, "1.0"),
             HOMEKIT_CHARACTERISTIC(IDENTIFY, my_accessory_identify),
@@ -22,7 +22,7 @@ homekit_accessory_t *accessories[] = {
         }),
         HOMEKIT_SERVICE(TEMPERATURE_SENSOR, .primary=true, .characteristics=(homekit_characteristic_t*[]) {
             &cha_current_temperature,
-            HOMEKIT_CHARACTERISTIC(NAME, "Temperature Sensor"),//optional
+            HOMEKIT_CHARACTERISTIC(NAME, "Temperature Sensor"),
             NULL
         }),
         HOMEKIT_SERVICE(HUMIDITY_SENSOR, .characteristics=(homekit_characteristic_t*[]) {
@@ -31,7 +31,8 @@ homekit_accessory_t *accessories[] = {
             NULL
         }),
         NULL
-    })
+    }),
+    NULL
 };
 
 homekit_server_config_t config = {

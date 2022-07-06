@@ -1,14 +1,10 @@
 #include <Arduino.h>
 #include <arduino_homekit_server.h>;
 #include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <ESP8266mDNS.h>
 #include <DHT.h>
 
 #define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
-// #define DHTPIN 2
-// #define DHTTYPE    DHT11
-DHT dht(2, DHT11);
+DHT dht(D3, DHT11);
 
   
 //access the config defined in C code
@@ -16,8 +12,8 @@ extern "C" homekit_server_config_t config;
 extern "C" homekit_characteristic_t cha_current_temperature;
 extern "C" homekit_characteristic_t cha_humidity;
 
-const char* ssid = "FRITZ!Box 7590 JB";
-const char* password = "93777898162534130520";
+const char* ssid = "SSID";
+const char* password = "password";
 
 static uint32_t next_heap_millis = 0;
 static uint32_t next_report_millis = 0;
@@ -26,12 +22,12 @@ static uint32_t next_report_millis = 0;
 
 void setup() {
   Serial.begin(9600);
+  dht.begin();
   wifi_connect();
   my_homekit_setup();
 }
 
 void loop() {
-  MDNS.update();
   my_homekit_loop();
   delay(10);
 }
@@ -41,6 +37,7 @@ void loop() {
 //==============================
 
 void my_homekit_setup() {
+  // homekit_storage_reset();
   // accessory_init();
   arduino_homekit_setup(&config);
 }
@@ -74,10 +71,20 @@ void my_homekit_report() {
   // homekit_characteristic_notify(1, 1);
   */
   
-  float temperature_value = dht.readTemperature();  
-  cha_current_temperature.value.float_value = temperature_value;
+  float temperature_value = dht.readTemperature();
+  if (isnan(temperature_value)) {
+    cha_current_temperature.value.float_value = 0;
+  }else {
+    cha_current_temperature.value.float_value = temperature_value;
+  }  
+  // cha_current_temperature.value.float_value = temperature_value;
   float humidity_value = dht.readHumidity();
-  cha_humidity.value.float_value = humidity_value;
+  if (isnan(humidity_value)) {
+    cha_humidity.value.float_value = 0;
+  }else {
+    cha_humidity.value.float_value = humidity_value;
+  }
+  // cha_humidity.value.float_value = humidity_value;
   LOG_D("Current temperature: %.1f", temperature_value);
   LOG_D("Current Humidity: %.1f", humidity_value);
   homekit_characteristic_notify(&cha_current_temperature, cha_current_temperature.value);
