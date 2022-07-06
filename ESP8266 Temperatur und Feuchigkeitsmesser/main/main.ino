@@ -4,7 +4,7 @@
 #include <DHT.h>
 
 #define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
-DHT dht(D3, DHT11);
+DHT dht(D3, DHT22);
 
   
 //access the config defined in C code
@@ -106,7 +106,3 @@ void wifi_connect() {
   Serial.printf("WiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
 }
 
-
-int random_value(int min, int max) {
-  return min + random(max - min);
-}
