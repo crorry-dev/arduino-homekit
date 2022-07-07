@@ -4,16 +4,19 @@
 #include <DHT.h>
 
 #define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
-DHT dht(D3, DHT22);
 
+// DHT dht(D3, DHT11);
+DHT dht(D3, DHT22);
   
 //access the config defined in C code
 extern "C" homekit_server_config_t config; 
 extern "C" homekit_characteristic_t cha_current_temperature;
 extern "C" homekit_characteristic_t cha_humidity;
 
-const char* ssid = "SSID";
+const char* ssid = "ssid";
 const char* password = "password";
+
+const int time_delay = 2;
 
 static uint32_t next_heap_millis = 0;
 static uint32_t next_report_millis = 0;
@@ -24,12 +27,15 @@ void setup() {
   Serial.begin(9600);
   dht.begin();
   wifi_connect();
-  my_homekit_setup();
+  // my_homekit_setup();
 }
 
 void loop() {
+  if(!WiFi.isConnected()){
+    wifi_connect();
+  }
   my_homekit_loop();
-  delay(10);
+  delay(time_delay * 1000);
 }
 
 //==============================
@@ -95,7 +101,7 @@ void my_homekit_report() {
 void wifi_connect() {
   WiFi.persistent(false);
   WiFi.mode(WIFI_STA);
-  WiFi.setAutoReconnect(true);
+  WiFi.setAutoReconnect(false);
   WiFi.begin(ssid, password);
   Serial.println("WiFi connecting...");
   while (!WiFi.isConnected()) {
@@ -104,4 +110,6 @@ void wifi_connect() {
   }
   Serial.print("\n");
   Serial.printf("WiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
+  // ---
+  my_homekit_setup();
 }
