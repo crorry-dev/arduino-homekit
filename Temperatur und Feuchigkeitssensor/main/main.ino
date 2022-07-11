@@ -4,7 +4,7 @@
 #include <DHT.h>
 
 #define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
-DHT dht(D3, DHT22);
+DHT dht(D3, DHT11);
 
   
 //access the config defined in C code
@@ -30,6 +30,9 @@ void setup() {
 void loop() {
   my_homekit_loop();
   delay(10);
+  if (!WiFi.isConnected()){
+    ESP.resart()
+  }
 }
 
 //==============================
