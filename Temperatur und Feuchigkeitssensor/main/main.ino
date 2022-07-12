@@ -5,7 +5,7 @@
 
 #define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
 DHT dht(D3, DHT11);
-
+#define BTN_PARRING D8
   
 //access the config defined in C code
 extern "C" homekit_server_config_t config; 
@@ -23,17 +23,24 @@ static uint32_t next_report_millis = 0;
 void setup() {
   Serial.begin(9600);
   dht.begin();
+  pinMode(BTN_PARRING, INPUT);
   wifi_connect();
   my_homekit_setup();
 }
 
 void loop() {
+  if (digitalRead(BTN_PARRING) == HIGH){homekit_storage_reset();ESP.restart();}
   my_homekit_loop();
   delay(10);
   if (!WiFi.isConnected()){
-    ESP.resart()
+    ESP.restart();
   }
 }
+
+//==============================
+// Button for parring
+
+//==============================
 
 //==============================
 // Homekit setup and loop
@@ -108,4 +115,3 @@ void wifi_connect() {
   Serial.print("\n");
   Serial.printf("WiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
 }
-

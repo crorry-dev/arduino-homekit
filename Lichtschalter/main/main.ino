@@ -5,16 +5,16 @@
 
 #define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
 
-// DHT dht(D3, DHT11);
-DHT dht(D3, DHT22);
+DHT dht(D3, DHT11);
+// DHT dht(D3, DHT22);
   
 //access the config defined in C code
 extern "C" homekit_server_config_t config; 
 extern "C" homekit_characteristic_t cha_current_temperature;
 extern "C" homekit_characteristic_t cha_humidity;
 
-const char* ssid = "ssid";
-const char* password = "password";
+const char* ssid = "FRITZ!Box 7590 JB";
+const char* password = "93777898162534130520";
 
 const int time_delay = 2;
 
@@ -31,6 +31,7 @@ void setup() {
 }
 
 void loop() {
+  Serial.println(WiFi.status());
   if(!WiFi.isConnected()){
     wifi_connect();
   }
@@ -59,8 +60,8 @@ void my_homekit_loop() {
   if (t > next_heap_millis) {
     // show heap info every 5 seconds
     next_heap_millis = t + 5 * 1000;
-    // LOG_D("Free heap: %d, HomeKit clients: %d",
-    //     ESP.getFreeHeap(), arduino_homekit_connected_clients_count());
+    LOG_D("Free heap: %d, HomeKit clients: %d",
+         ESP.getFreeHeap(), arduino_homekit_connected_clients_count());
 
   }
 }
@@ -105,11 +106,12 @@ void wifi_connect() {
   WiFi.begin(ssid, password);
   Serial.println("WiFi connecting...");
   while (!WiFi.isConnected()) {
-    delay(100);
+    delay(1000);
     Serial.print(".");
   }
   Serial.print("\n");
   Serial.printf("WiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
   // ---
+  delay(5000);
   my_homekit_setup();
 }
