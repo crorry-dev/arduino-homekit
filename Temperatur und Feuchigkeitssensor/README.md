@@ -1,5 +1,11 @@
 # ESP ESP8266 Temperatur und Feuchigkeitsmesser
 
+# Pins anschließen
+5V -> DHT22 Pin1
+GND -> DHT22 Pin4
+D3 -> 10K Wiederstand zwischen 5V und DHT22 Pin2
+D8 -> Input für Parring/ Reset Homekit (3,3V -> Button; GND -> 10K -> Button; Button -> D8)
+
 # Benötigte Teile
 Name | Anzahl | link
 --- | --- | ---
