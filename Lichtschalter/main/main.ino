@@ -13,8 +13,8 @@ extern "C" homekit_server_config_t config;
 extern "C" homekit_characteristic_t cha_current_temperature;
 extern "C" homekit_characteristic_t cha_humidity;
 
-const char* ssid = "FRITZ!Box 7590 JB";
-const char* password = "93777898162534130520";
+const char* ssid = "SSID";
+const char* password = "password";
 
 const int time_delay = 2;
 
