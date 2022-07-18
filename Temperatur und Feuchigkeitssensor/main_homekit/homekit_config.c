@@ -5,7 +5,7 @@
 #include <time.h>
 
 
-
+/*
 const char* random_name(){
   char letters[] = "ABCDEFGHIJKLMNOPQURSUVWXYZ";
   char random_string[] = "0123456789";
@@ -16,24 +16,25 @@ const char* random_name(){
   }
   return random_string;
 }
+*/
 
 void my_accessory_identify(homekit_value_t _value) {
   printf("accessory identify\n");
 }
 
 // char rName[] = "";
-char rName[10];
-rName = random_name();
+// char rName[10];
+// rName = random_name();
 
 homekit_characteristic_t cha_current_temperature = HOMEKIT_CHARACTERISTIC_(CURRENT_TEMPERATURE, 0);
 homekit_characteristic_t cha_humidity  = HOMEKIT_CHARACTERISTIC_(CURRENT_RELATIVE_HUMIDITY, 0);
-homekit_characteristic_t cha_battery  = HOMEKIT_CHARACTERISTIC_(BATTERY_LEVEL,0);
+homekit_characteristic_t cha_battery  = HOMEKIT_CHARACTERISTIC_(BATTERY_LEVEL, 0);
 
 
 homekit_accessory_t *accessories[] = {
     HOMEKIT_ACCESSORY(.id=1, .category=homekit_accessory_category_sensor, .services=(homekit_service_t*[]) {
         HOMEKIT_SERVICE(ACCESSORY_INFORMATION, .characteristics=(homekit_characteristic_t*[]) {
-            HOMEKIT_CHARACTERISTIC(NAME, rName),
+            HOMEKIT_CHARACTERISTIC(NAME, "Sensor 5"), // rName),
             HOMEKIT_CHARACTERISTIC(MANUFACTURER, "Arduino HomeKit"),
             HOMEKIT_CHARACTERISTIC(SERIAL_NUMBER, "123456789"),
             HOMEKIT_CHARACTERISTIC(MODEL, "ESP8266"),
